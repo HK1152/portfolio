@@ -11,7 +11,7 @@ export const PortfolioProvider = ({ children }) => {
   useEffect(() => {
     const fetchPortfolioData = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/api/portfolio');
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/portfolio`);
         setCvData(data);
         setLoading(false);
       } catch (err) {
