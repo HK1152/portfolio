@@ -81,43 +81,57 @@ export const cvData = {
       id: 1,
       title: "AI Story-to-YouTube Automation",
       tech: "n8n, AI APIs, JavaScript, YouTube API",
-      description: "Built an end-to-end n8n automation that generates a complete story from a title, creates an AI video, and uploads it automatically to YouTube. Integrated multiple APIs using JSON workflows to eliminate manual content creation and publishing."
+      description: "Built an end-to-end n8n automation that generates a complete story from a title, creates an AI video, and uploads it automatically to YouTube. Integrated multiple APIs using JSON workflows to eliminate manual content creation and publishing.",
+      liveDemo: "https://example.com/demo1",
+      githubLink: "https://github.com/HK1152/ai-automation"
     },
     {
       id: 2,
       title: "Employee Management System",
       tech: "React, JavaScript",
-      description: "Developed a role-based Employee Management System where admin can assign tasks to selected users. Implemented user authentication and task visibility based on login roles. Enabled users to view assigned tasks and update their completion status dynamically."
+      description: "Developed a role-based Employee Management System where admin can assign tasks to selected users. Implemented user authentication and task visibility based on login roles. Enabled users to view assigned tasks and update their completion status dynamically.",
+      liveDemo: "https://example.com/demo2",
+      githubLink: "https://github.com/HK1152/employee-management"
     },
     {
       id: 3,
       title: "Tata Cliq Clone",
       tech: "HTML5, CSS3, Bootstrap, JavaScript",
-      description: "Developed a fully responsive e-commerce website replicating Tata Cliq's design and functionality. Worked in a team of three, contributing mainly to JavaScript features such as dynamic product display, cart logic, and interactive UI elements."
+      description: "Developed a fully responsive e-commerce website replicating Tata Cliq's design and functionality. Worked in a team of three, contributing mainly to JavaScript features such as dynamic product display, cart logic, and interactive UI elements.",
+      liveDemo: "https://example.com/demo3",
+      githubLink: "https://github.com/HK1152/tata-cliq-clone"
     },
     {
       id: 4,
       title: "Samsung Electronics Clone",
       tech: "HTML5, CSS3, Bootstrap",
-      description: "Developed a product showcase clone with responsive grid system using Bootstrap."
+      description: "Developed a product showcase clone with responsive grid system using Bootstrap.",
+      liveDemo: "hk-samsung-project.netlify.app",
+      githubLink: "https://github.com/HK1152/samsung-clone"
     },
     {
       id: 5,
       title: "Rolex Watch Clone",
       tech: "HTML5, CSS3, Bootstrap",
-      description: "Built an e-commerce style landing page featuring product cards and modern UI components."
+      description: "Built an e-commerce style landing page featuring product cards and modern UI components.",
+      liveDemo: "rolex-clone-1152.netlify.app",
+      githubLink: "https://github.com/HK1152/rolex-clone"
     },
     {
       id: 6,
       title: "Banking System",
       tech: "HTML5, CSS3, JavaScript",
-      description: "Implemented a basic simulation of banking features like deposit, withdraw, and balance check."
+      description: "Implemented a basic simulation of banking features like deposit, withdraw, and balance check.",
+      liveDemo: "https://example.com/demo6",
+      githubLink: "https://github.com/HK1152/banking-system"
     },
     {
       id: 7,
       title: "Tic Tac Toe Game",
       tech: "HTML5, CSS3, JavaScript",
-      description: "Developed a 2-player interactive game with win-draw logic and responsive UI."
+      description: "Developed a 2-player interactive game with win-draw logic and responsive UI.",
+      liveDemo: "https://example.com/demo7",
+      githubLink: "https://github.com/HK1152/tic-tac-toe"
     }
   ],
   extraActivities: [
