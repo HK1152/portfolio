@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background -->
+  <rect width="100" height="100" rx="20" fill="#0a0a0a" />
+  
+  <!-- Glowing Border -->
+  <rect x="5" y="5" width="90" height="90" rx="15" fill="none" stroke="#10b981" stroke-width="2" opacity="0.5" />
+  
+  <!-- Outer glowing code bracket -->
+  <path d="M35 30 L15 50 L35 70" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity="0.9" />
+  
+  <!-- Right code bracket -->
+  <path d="M65 30 L85 50 L65 70" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity="0.9" />
+  
+  <!-- Center slash -->
+  <path d="M58 20 L42 80" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" opacity="0.9" />
+</svg>
