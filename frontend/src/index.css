@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./styles/design-tokens.css";
 
 @theme {
   --font-sans: 'Inter', sans-serif;
@@ -38,19 +39,21 @@ html {
 
 body {
   font-family: 'Inter', sans-serif;
+  background-color: var(--bg-primary, #000000);
+  color: var(--text-primary, #ffffff);
 }
 
-/* From Uiverse.io by kamehame-ha (Applied to About & Education Cards) */
+/* Card hover & blur micro-interactions */
 .blur-item {
-  transition: all 400ms !important;
+  transition: transform var(--transition-normal), filter var(--transition-normal);
   transform: scale(1);
 }
 
 .blur-item:hover {
-  transform: scale(1.05, 1.05) !important;
+  transform: scale(1.03);
 }
 
 .about-cards-container:hover .blur-item:not(:hover) {
-  filter: blur(10px);
-  transform: scale(0.9, 0.9);
+  filter: blur(6px);
+  transform: scale(0.98);
 }
