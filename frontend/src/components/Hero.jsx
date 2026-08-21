@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
 import { Download, ArrowRight, Mail } from 'lucide-react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
-import * as FaIcons from 'react-icons/fa';
 import ShinyText from './ShinyText';
 import { PortfolioContext } from '../context/PortfolioContext';
 import { useContext } from 'react';
@@ -13,20 +12,6 @@ import VariableProximity from './VariableProximity';
 const Hero = () => {
   const containerRef = React.useRef(null);
   const { cvData } = useContext(PortfolioContext);
-
-  const getCvUrl = (url) => {
-    if (!url) return null;
-    if (url.startsWith('http')) return url;
-    return `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${url}`;
-  };
-
-  const cvUrl = getCvUrl(cvData.personalInfo.cvUrl);
-  const linkedInUrl = cvData.personalInfo.linkedin
-    ? (cvData.personalInfo.linkedin.startsWith('http') ? cvData.personalInfo.linkedin : `https://${cvData.personalInfo.linkedin}`)
-    : null;
-  const githubUrl = cvData.personalInfo.github
-    ? (cvData.personalInfo.github.startsWith('http') ? cvData.personalInfo.github : `https://${cvData.personalInfo.github}`)
-    : null;
 
   const renderHeroContent = (isMaskLayer) => (
     <div className="w-full h-full flex flex-col items-center justify-center pt-20 pb-10 px-4 sm:px-6 lg:px-8">
@@ -75,33 +60,26 @@ const Hero = () => {
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
 
-            {cvUrl && (
-              <a
-                href={cvUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`group flex items-center gap-2 border px-8 py-4 rounded-full font-semibold transition-all w-full sm:w-auto justify-center ${isMaskLayer ? 'border-neutral-300 text-black hover:bg-neutral-100' : 'border-neutral-700 text-white hover:bg-neutral-800'}`}
-              >
-                <Download size={18} />
-                Download Resume
-              </a>
-            )}
+            <a
+              href="/kavya_cv.pdf"
+              download="Kavya_Patel_CV.pdf"
+              className={`group flex items-center gap-2 border px-8 py-4 rounded-full font-semibold transition-all w-full sm:w-auto justify-center ${isMaskLayer ? 'border-neutral-300 text-black hover:bg-neutral-100' : 'border-neutral-700 text-white hover:bg-neutral-800'}`}
+            >
+              <Download size={18} />
+              Download Resume
+            </a>
           </div>
 
           <div className="mt-12 flex justify-center space-x-6">
-            {linkedInUrl && (
-              <a href={linkedInUrl} target="_blank" rel="noopener noreferrer" className={`transition-colors ${isMaskLayer ? 'text-slate-800 hover:text-blue-600' : 'text-neutral-400 hover:text-blue-400'}`}>
-                <span className="sr-only">LinkedIn</span>
-                <FaLinkedin size={24} />
-              </a>
-            )}
-            {githubUrl && (
-              <a href={githubUrl} target="_blank" rel="noopener noreferrer" className={`transition-colors ${isMaskLayer ? 'text-slate-800 hover:text-black' : 'text-neutral-400 hover:text-white'}`}>
-                <span className="sr-only">GitHub</span>
-                <FaGithub size={24} />
-              </a>
-            )}
-            <a href={`mailto:${cvData.personalInfo.email}`} className={`transition-colors ${isMaskLayer ? 'text-slate-800 hover:text-emerald-600' : 'text-neutral-400 hover:text-emerald-400'}`}>
+            <a href={`https://${cvData.personalInfo.linkedin}`} target="_blank" rel="noopener noreferrer" className={`transition-colors ${isMaskLayer ? 'text-slate-800 hover:text-blue-600' : 'text-neutral-400 hover:text-blue-400'}`}>
+              <span className="sr-only">LinkedIn</span>
+              <FaLinkedin size={24} />
+            </a>
+            <a href="https://github.com/hk1152" target="_blank" rel="noopener noreferrer" className={`transition-colors ${isMaskLayer ? 'text-slate-800 hover:text-black' : 'text-neutral-400 hover:text-white'}`}>
+              <span className="sr-only">GitHub</span>
+              <FaGithub size={24} />
+            </a>
+            <a href={`mailto:${cvData.personalInfo.email}`} target='_blank' className={`transition-colors ${isMaskLayer ? 'text-slate-800 hover:text-emerald-600' : 'text-neutral-400 hover:text-emerald-400'}`}>
               <span className="sr-only">Email</span>
               <Mail size={24} />
             </a>

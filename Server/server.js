@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const dns = require('dns');
@@ -10,9 +9,8 @@ const contactRoutes = require('./routes/contactRoutes');
 // Fix for querySrv ECONNREFUSED on some networks
 dns.setServers(['8.8.8.8', '8.8.4.4']);
 
-// Load env vars from Server/.env regardless of current working directory
-const dotenvPath = path.resolve(__dirname, '.env');
-dotenv.config({ path: dotenvPath });
+// Load env vars
+dotenv.config();
 
 // Connect to database
 connectDB();
@@ -20,11 +18,8 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : true,
-}));
+app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 app.use('/api/portfolio', portfolioRoutes);

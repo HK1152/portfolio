@@ -5,11 +5,10 @@ import SectionHeading from './SectionHeading';
 import { Send, Upload, Mail, Phone, MapPin } from 'lucide-react';
 import { PortfolioContext } from '../context/PortfolioContext';
 import { useContext } from 'react';
+import cvFile from '../assets/file/kavya patel CV(27Feb26).pdf';
 import { auth, googleProvider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
 import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const Contact = () => {
   const [ref, inView] = useInView({
@@ -43,7 +42,7 @@ const Contact = () => {
       const userEmail = user.email;
 
       // 2. Send data to backend
-      const response = await axios.post(`${API_URL}/api/contact`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/contact`, {
         name: formData.name,
         email: userEmail,
         message: formData.message
@@ -66,14 +65,6 @@ const Contact = () => {
       setTimeout(() => setSubmitStatus(null), 5000);
     }
   };
-
-  const getCvUrl = (url) => {
-    if (!url) return null;
-    if (url.startsWith('http')) return url;
-    return `${API_URL}${url}`;
-  };
-
-  const cvUrl = getCvUrl(cvData.personalInfo.cvUrl);
 
   return (
     <section id="contact" className="py-20 bg-neutral-950 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -125,39 +116,34 @@ const Contact = () => {
                   </div>
                 </div>
 
-                {cvData.personalInfo.location && (
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-neutral-800 rounded-full flex items-center justify-center flex-shrink-0 text-purple-400">
-                      <MapPin size={20} />
-                    </div>
-                    <div>
-                      <p className="text-neutral-500 text-sm">Location</p>
-                      <p className="text-white font-medium">
-                        {cvData.personalInfo.location}
-                      </p>
-                    </div>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-neutral-800 rounded-full flex items-center justify-center flex-shrink-0 text-purple-400">
+                    <MapPin size={20} />
                   </div>
-                )}
+                  <div>
+                    <p className="text-neutral-500 text-sm">Location</p>
+                    <p className="text-white font-medium">
+                      Gandhinagar, India
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
             
             {/* Resume Callout */}
-            {cvUrl && (
-              <div className="bg-gradient-to-r from-blue-900/40 to-emerald-900/40 border border-neutral-800 rounded-3xl p-8 flex items-center justify-between">
-                <div>
-                  <h4 className="text-white font-bold mb-2">Want my full CV?</h4>
-                  <p className="text-neutral-400 text-sm">Download the PDF version here.</p>
-                </div>
-                <a
-                  href={cvUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-4 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors border border-white/10"
-                >
-                  <Upload className="rotate-180" size={24} />
-                </a>
+            <div className="bg-gradient-to-r from-blue-900/40 to-emerald-900/40 border border-neutral-800 rounded-3xl p-8 flex items-center justify-between">
+              <div>
+                <h4 className="text-white font-bold mb-2">Want my full CV?</h4>
+                <p className="text-neutral-400 text-sm">Download the PDF version here.</p>
               </div>
-            )}
+              <a 
+                href="/kavya_cv.pdf" 
+                download="Kavya_Patel_CV.pdf"
+                className="p-4 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors border border-white/10"
+              >
+                <Upload className="rotate-180" size={24} />
+              </a>
+            </div>
           </motion.div>
 
           {/* Contact Form */}

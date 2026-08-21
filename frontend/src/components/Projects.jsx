@@ -97,13 +97,32 @@ const Projects = () => {
                     </div>
 
                     <div className="flight-card__actions mt-4">
-                      <button className="flight-card__search-btn" type="button">
+                      <button 
+                        className="flight-card__search-btn" 
+                        type="button"
+                        onClick={() => {
+                          if (project.liveDemo && !project.liveDemo.includes('example.com')) {
+                            const url = project.liveDemo.startsWith('http') ? project.liveDemo : `https://${project.liveDemo}`;
+                            window.open(url, '_blank', 'noopener,noreferrer');
+                          } else {
+                            alert('Live Demo link will be added soon!');
+                          }
+                        }}
+                      >
                         Live Demo
                       </button>
                       <button
                         className="flight-card__favorite-btn"
                         type="button"
                         title="View on GitHub"
+                        onClick={() => {
+                          if (project.githubLink && !project.githubLink.includes('example.com')) {
+                            const url = project.githubLink.startsWith('http') ? project.githubLink : `https://${project.githubLink}`;
+                            window.open(url, '_blank', 'noopener,noreferrer');
+                          } else {
+                            alert('GitHub link will be added soon!');
+                          }
+                        }}
                       >
                         <FaGithub size={18} />
                       </button>
