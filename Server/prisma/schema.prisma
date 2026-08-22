@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  adminId   String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Portfolio {
+  id              Int       @id @default(autoincrement())
+  name            String
+  title           String
+  email           String
+  phone           String?
+  linkedin        String?
+  github          String?
+  location        String?
+  about           String?
+  cvUrl           String?
+  extraActivities String[]
+  
+  educations      Education[]
+  experiences     Experience[]
+  skills          SkillCategory[]
+  projects        Project[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Education {
+  id           Int        @id @default(autoincrement())
+  portfolioId  Int
+  period       String
+  degree       String
+  institution  String
+  details      String[]
+  
+  portfolio    Portfolio  @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+}
+
+model Experience {
+  id           Int        @id @default(autoincrement())
+  portfolioId  Int
+  period       String
+  role         String
+  company      String
+  details      String[]
+  
+  portfolio    Portfolio  @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+}
+
+model SkillCategory {
+  id           Int        @id @default(autoincrement())
+  portfolioId  Int
+  category     String
+  items        String[]
+  
+  portfolio    Portfolio  @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id           Int        @id @default(autoincrement())
+  portfolioId  Int
+  title        String
+  tech         String
+  description  String
+  liveDemo     String?
+  githubLink   String?
+  
+  portfolio    Portfolio  @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+}

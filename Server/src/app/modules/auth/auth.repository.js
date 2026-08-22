@@ -1,16 +1,38 @@
-const User = require('./auth.model');
+const prisma = require('../../config/prismaClient');
+const bcrypt = require('bcryptjs');
 
 class AuthRepository {
   async findByAdminId(adminId) {
-    return await User.findOne({ adminId });
+    return await prisma.user.findUnique({
+      where: { adminId },
+    });
   }
 
   async createUser(userData) {
-    return await User.create(userData);
+    // Hash password before saving since Prisma doesn't have hooks
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(userData.password, salt);
+    
+    return await prisma.user.create({
+      data: {
+        adminId: userData.adminId,
+        password: hashedPassword,
+        role: userData.role || 'admin',
+      },
+    });
   }
 
   async findById(id) {
-    return await User.findById(id).select('-password');
+    return await prisma.user.findUnique({
+      where: { id: parseInt(id) },
+      select: {
+        id: true,
+        adminId: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 }
 

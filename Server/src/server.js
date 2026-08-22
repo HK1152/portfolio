@@ -1,17 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const dns = require('dns');
-const connectDB = require('./app/config/db.config');
 const env = require('./app/config/env.config');
 const appRouter = require('./app/routes');
 const errorHandler = require('./app/middleware/error.middleware');
 const notFoundHandler = require('./app/middleware/notFound.middleware');
-
-// Fix for querySrv ECONNREFUSED on some networks
-dns.setServers(['8.8.8.8', '8.8.4.4']);
-
-// Connect to Database
-connectDB();
 
 const app = express();
 

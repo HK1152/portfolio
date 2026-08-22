@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
 const ApiError = require('../utils/apiError');
-const User = require('../modules/auth/auth.model');
+const prisma = require('../config/prismaClient');
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
@@ -18,7 +18,16 @@ exports.protect = catchAsync(async (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
 
-    req.user = await User.findById(decoded.id).select('-password');
+    req.user = await prisma.user.findUnique({
+      where: { id: parseInt(decoded.id) },
+      select: {
+        id: true,
+        adminId: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    });
     if (!req.user) {
         return next(ApiError.unauthorized('Not authorized to access this route - user not found'));
     }

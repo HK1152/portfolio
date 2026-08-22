@@ -1,5 +1,6 @@
 const AuthRepository = require('./auth.repository');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 class AuthService {
   generateToken(id) {
@@ -11,12 +12,12 @@ class AuthService {
   async loginUser(adminId, password) {
     const user = await AuthRepository.findByAdminId(adminId);
 
-    if (user && (await user.matchPassword(password))) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       return {
-        _id: user._id,
+        id: user.id,
         adminId: user.adminId,
         role: user.role,
-        token: this.generateToken(user._id),
+        token: this.generateToken(user.id),
       };
     } else {
       throw new Error('Invalid Admin ID or password');

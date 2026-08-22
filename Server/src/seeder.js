@@ -1,10 +1,5 @@
-const dns = require('dns');
-const connectDB = require('./app/config/db.config');
-const Portfolio = require('./app/modules/portfolio/portfolio.model');
-const User = require('./app/modules/auth/auth.model');
-
-// Fix for querySrv ECONNREFUSED on some networks
-dns.setServers(['8.8.8.8', '8.8.4.4']);
+const prisma = require('./app/config/prismaClient');
+const bcrypt = require('bcryptjs');
 
 const cvData = {
   personalInfo: {
@@ -19,7 +14,6 @@ const cvData = {
   },
   education: [
     {
-      id: 1,
       period: "2023 - 2026",
       degree: "Bachelor of Computer Applications (BCA)",
       institution: "B P College of Computer Studies, Gandhinagar",
@@ -30,7 +24,6 @@ const cvData = {
       ]
     },
     {
-      id: 2,
       period: "2024 - 2025",
       degree: "Full Stack Development",
       institution: "Red & White Multimedia Education",
@@ -43,7 +36,6 @@ const cvData = {
   ],
   experience: [
     {
-      id: 1,
       period: "Dec 2025 - Feb 2026",
       role: "Web Development Intern",
       company: "Skillairo EduTech Pvt. Ltd.",
@@ -54,7 +46,6 @@ const cvData = {
       ]
     },
     {
-      id: 2,
       period: "Dec 2025 - Jan 2026",
       role: "Frontend Development",
       company: "Skylink Infosolutions™",
@@ -67,7 +58,6 @@ const cvData = {
       ]
     },
     {
-      id: 3,
       period: "June 2025 - July 2025",
       role: "Students Summer Internship",
       company: "IEEE Pune Section - IEEE (EBMS) Pune Chapter",
@@ -88,43 +78,36 @@ const cvData = {
   ],
   projects: [
     {
-      id: 1,
       title: "AI Story-to-YouTube Automation",
       tech: "n8n, AI APIs, JavaScript, YouTube API",
       description: "Built an end-to-end n8n automation that generates a complete story from a title, creates an AI video, and uploads it automatically to YouTube. Integrated multiple APIs using JSON workflows to eliminate manual content creation and publishing."
     },
     {
-      id: 2,
       title: "Employee Management System",
       tech: "React, JavaScript",
       description: "Developed a role-based Employee Management System where admin can assign tasks to selected users. Implemented user authentication and task visibility based on login roles. Enabled users to view assigned tasks and update their completion status dynamically."
     },
     {
-      id: 3,
       title: "Tata Cliq Clone",
       tech: "HTML5, CSS3, Bootstrap, JavaScript",
       description: "Developed a fully responsive e-commerce website replicating Tata Cliq's design and functionality. Worked in a team of three, contributing mainly to JavaScript features such as dynamic product display, cart logic, and interactive UI elements."
     },
     {
-      id: 4,
       title: "Samsung Electronics Clone",
       tech: "HTML5, CSS3, Bootstrap",
       description: "Developed a product showcase clone with responsive grid system using Bootstrap."
     },
     {
-      id: 5,
       title: "Rolex Watch Clone",
       tech: "HTML5, CSS3, Bootstrap",
       description: "Built an e-commerce style landing page featuring product cards and modern UI components."
     },
     {
-      id: 6,
       title: "Banking System",
       tech: "HTML5, CSS3, JavaScript",
       description: "Implemented a basic simulation of banking features like deposit, withdraw, and balance check."
     },
     {
-      id: 7,
       title: "Tic Tac Toe Game",
       tech: "HTML5, CSS3, JavaScript",
       description: "Developed a 2-player interactive game with win-draw logic and responsive UI."
@@ -140,17 +123,42 @@ const cvData = {
 
 const importData = async () => {
   try {
-    await connectDB();
-    await Portfolio.deleteMany();
-    await User.deleteMany();
+    // Clean existing data
+    await prisma.education.deleteMany();
+    await prisma.experience.deleteMany();
+    await prisma.skillCategory.deleteMany();
+    await prisma.project.deleteMany();
+    await prisma.portfolio.deleteMany();
+    await prisma.user.deleteMany();
 
-    await Portfolio.create(cvData);
+    // Create Portfolio with nested data
+    await prisma.portfolio.create({
+      data: {
+        name: cvData.personalInfo.name,
+        title: cvData.personalInfo.title,
+        email: cvData.personalInfo.email,
+        phone: cvData.personalInfo.phone,
+        linkedin: cvData.personalInfo.linkedin,
+        github: cvData.personalInfo.github,
+        location: cvData.personalInfo.location,
+        about: cvData.personalInfo.about,
+        extraActivities: cvData.extraActivities,
+        educations: { create: cvData.education },
+        experiences: { create: cvData.experience },
+        skills: { create: cvData.skills },
+        projects: { create: cvData.projects },
+      }
+    });
     
     // Seed Admin User
-    await User.create({
-      adminId: 'HK-1152',
-      password: '11524462',
-      role: 'admin'
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash('11524462', salt);
+    await prisma.user.create({
+      data: {
+        adminId: 'HK-1152',
+        password: hashedPassword,
+        role: 'admin'
+      }
     });
 
     console.log('✅ Portfolio Data & Admin User Seeded Successfully!');

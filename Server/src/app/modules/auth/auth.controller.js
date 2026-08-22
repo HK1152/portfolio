@@ -21,7 +21,7 @@ class AuthController {
   });
 
   getMe = catchAsync(async (req, res) => {
-    const user = await AuthService.getAdminProfile(req.user._id);
+    const user = await AuthService.getAdminProfile(req.user.id);
     res.status(200).json({
       success: true,
       data: user
