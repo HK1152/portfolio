@@ -1,6 +1,7 @@
 const dns = require('dns');
 const connectDB = require('./app/config/db.config');
 const Portfolio = require('./app/modules/portfolio/portfolio.model');
+const User = require('./app/modules/auth/auth.model');
 
 // Fix for querySrv ECONNREFUSED on some networks
 dns.setServers(['8.8.8.8', '8.8.4.4']);
@@ -141,8 +142,18 @@ const importData = async () => {
   try {
     await connectDB();
     await Portfolio.deleteMany();
+    await User.deleteMany();
+
     await Portfolio.create(cvData);
-    console.log('✅ Portfolio Data Seeded Successfully!');
+    
+    // Seed Admin User
+    await User.create({
+      adminId: 'HK-1152',
+      password: '11524462',
+      role: 'admin'
+    });
+
+    console.log('✅ Portfolio Data & Admin User Seeded Successfully!');
     process.exit(0);
   } catch (error) {
     console.error(`❌ Seeding Error: ${error.message}`);

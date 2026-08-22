@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { getPortfolio, updatePortfolio } = require('./portfolio.controller');
-const requireAdmin = require('../../middleware/requireAdmin.middleware');
+const { protect } = require('../../middleware/auth.middleware');
 
 router.get('/', getPortfolio);
-router.put('/', requireAdmin, updatePortfolio);
+router.put('/', protect, updatePortfolio);
 
 module.exports = router;

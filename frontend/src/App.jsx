@@ -1,4 +1,6 @@
 import React, { useContext, lazy, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
 import Navbar from './components/layout/Navbar';
 import LiquidSideNav from './components/layout/LiquidSideNav';
 import Footer from './components/layout/Footer';
@@ -6,8 +8,9 @@ import ErrorBoundary from './components/ui/ErrorBoundary';
 import SectionLoader from './components/ui/SectionLoader';
 import { PortfolioContext } from './context/PortfolioContext';
 
+import Hero from './components/sections/Hero';
+
 // Lazy Loaded Sections
-const Hero = lazy(() => import('./components/sections/Hero'));
 const About = lazy(() => import('./components/sections/About'));
 const Skills = lazy(() => import('./components/sections/Skills'));
 const Experience = lazy(() => import('./components/sections/Experience'));
@@ -17,24 +20,35 @@ const Contact = lazy(() => import('./components/sections/Contact'));
 // Lazy Loaded Effects
 const ClickSpark = lazy(() => import('./components/effects/ClickSpark'));
 
-function App() {
-  const { cvData, loading, error, refreshPortfolio } = useContext(PortfolioContext);
+// Admin Pages
+import Login from './components/pages/admin/Login';
+import AdminDashboard from './components/pages/admin/AdminDashboard';
+import ProtectedRoute from './components/ui/ProtectedRoute';
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center">
-        <div className="relative">
-          <div className="w-16 h-16 border-t-2 border-emerald-500 border-solid rounded-full animate-spin"></div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-8 h-8 bg-emerald-500/20 rounded-full animate-pulse"></div>
-          </div>
-        </div>
-        <p className="mt-6 text-neutral-500 font-medium tracking-[0.2em] uppercase text-xs animate-pulse">
-          Crafting Experience
-        </p>
-      </div>
-    );
-  }
+// LazySection Component using Intersection Observer
+const LazySection = ({ children, fallback, minHeight }) => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    rootMargin: '300px 0px', // Load 300px before scrolling into view
+  });
+
+  return (
+    <div ref={ref} style={{ minHeight: inView ? 'auto' : minHeight, width: '100%' }}>
+      {inView ? (
+        <ErrorBoundary isSection={true}>
+          <Suspense fallback={fallback}>
+            {children}
+          </Suspense>
+        </ErrorBoundary>
+      ) : (
+        fallback
+      )}
+    </div>
+  );
+};
+
+const Portfolio = () => {
+  const { cvData, error, refreshPortfolio } = useContext(PortfolioContext);
 
   if (error && !cvData) {
     return (
@@ -72,46 +86,32 @@ function App() {
 
             <main>
               {/* Hero Section */}
-              <ErrorBoundary isSection={true}>
-                <Suspense fallback={<SectionLoader title="Loading Hero" minHeight="100vh" />}>
-                  <Hero />
-                </Suspense>
-              </ErrorBoundary>
+              <Hero />
 
               {/* About Section */}
-              <ErrorBoundary isSection={true}>
-                <Suspense fallback={<SectionLoader title="Loading About" minHeight="600px" />}>
-                  <About />
-                </Suspense>
-              </ErrorBoundary>
+              <LazySection fallback={<SectionLoader title="Loading About" minHeight="600px" />} minHeight="600px">
+                <About />
+              </LazySection>
 
               {/* Skills Section */}
-              <ErrorBoundary isSection={true}>
-                <Suspense fallback={<SectionLoader title="Loading Skills" minHeight="600px" />}>
-                  <Skills />
-                </Suspense>
-              </ErrorBoundary>
+              <LazySection fallback={<SectionLoader title="Loading Skills" minHeight="600px" />} minHeight="600px">
+                <Skills />
+              </LazySection>
 
               {/* Experience Section */}
-              <ErrorBoundary isSection={true}>
-                <Suspense fallback={<SectionLoader title="Loading Experience" minHeight="500px" />}>
-                  <Experience />
-                </Suspense>
-              </ErrorBoundary>
+              <LazySection fallback={<SectionLoader title="Loading Experience" minHeight="500px" />} minHeight="500px">
+                <Experience />
+              </LazySection>
 
               {/* Projects Section */}
-              <ErrorBoundary isSection={true}>
-                <Suspense fallback={<SectionLoader title="Loading Projects" minHeight="700px" />}>
-                  <Projects />
-                </Suspense>
-              </ErrorBoundary>
+              <LazySection fallback={<SectionLoader title="Loading Projects" minHeight="700px" />} minHeight="700px">
+                <Projects />
+              </LazySection>
 
               {/* Contact Section */}
-              <ErrorBoundary isSection={true}>
-                <Suspense fallback={<SectionLoader title="Loading Contact" minHeight="600px" />}>
-                  <Contact />
-                </Suspense>
-              </ErrorBoundary>
+              <LazySection fallback={<SectionLoader title="Loading Contact" minHeight="600px" />} minHeight="600px">
+                <Contact />
+              </LazySection>
             </main>
 
             <Footer />
@@ -119,6 +119,23 @@ function App() {
         </ClickSpark>
       </Suspense>
     </ErrorBoundary>
+  );
+};
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Portfolio />} />
+      <Route path="/login" element={<Login />} />
+      <Route 
+        path="/admin" 
+        element={
+          <ProtectedRoute>
+            <AdminDashboard />
+          </ProtectedRoute>
+        } 
+      />
+    </Routes>
   );
 }
 

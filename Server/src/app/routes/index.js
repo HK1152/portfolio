@@ -3,6 +3,7 @@ const router = express.Router();
 
 const portfolioRoutes = require('../modules/portfolio/portfolio.routes');
 const contactRoutes = require('../modules/contact/contact.routes');
+const authRoutes = require('../modules/auth/auth.routes');
 
 // Healthcheck Route
 router.get('/health', (req, res) => {
@@ -14,6 +15,7 @@ router.get('/health', (req, res) => {
 });
 
 // Modular Routes
+router.use('/auth', authRoutes);
 router.use('/portfolio', portfolioRoutes);
 router.use('/contact', contactRoutes);
 
