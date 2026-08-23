@@ -10,6 +10,7 @@ class PortfolioRepository {
     const portfolio = await prisma.portfolio.findFirst({
       include: {
         educations: { orderBy: { id: 'asc' } },
+        certifications: { orderBy: { id: 'asc' } },
         experiences: { orderBy: { id: 'asc' } },
         skills: { orderBy: { id: 'asc' } },
         techLogos: { orderBy: { id: 'asc' } },
@@ -48,8 +49,8 @@ class PortfolioRepository {
   async getAbout() {
     const portfolio = await prisma.portfolio.findFirst({
       include: {
-        educations: true,
-        certifications: true,
+        educations: { orderBy: { id: 'asc' } },
+        certifications: { orderBy: { id: 'asc' } },
       },
     });
     if (!portfolio) return null;
