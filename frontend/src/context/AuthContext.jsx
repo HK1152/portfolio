@@ -31,11 +31,14 @@ export const AuthProvider = ({ children }) => {
         password,
       });
 
-      if (response.data.success) {
-        const userData = response.data.data;
+      // apiClient interceptor already returns response.data
+      if (response.success) {
+        const userData = response.data;
         setUser(userData);
         localStorage.setItem('adminUser', JSON.stringify(userData));
         return { success: true };
+      } else {
+        return { success: false, message: response.message || 'Login failed' };
       }
     } catch (error) {
       console.error('Login error:', error);
