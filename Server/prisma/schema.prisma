@@ -20,6 +20,7 @@ model Portfolio {
   name            String
   title           String
   email           String
+  phone           String?
   linkedin        String?
   github          String?
   location        String?

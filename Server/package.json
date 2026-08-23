@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "seed": "node src/seeder.js"
+    "seed": "node src/seeder.js",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "Kavya Patel",
@@ -27,10 +28,10 @@
     "multer": "^2.2.0",
     "nodemailer": "^8.0.5",
     "pg": "^8.23.0",
+    "prisma": "^7.9.1",
     "sanitize-html": "^2.17.7"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14",
-    "prisma": "^7.9.1"
+    "nodemon": "^3.1.14"
   }
 }

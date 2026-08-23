@@ -124,6 +124,10 @@ class PortfolioRepository {
             deleteMany: {},
             create: this.stripIds(data.education),
           },
+          certifications: {
+            deleteMany: {},
+            create: this.stripIds(data.certifications),
+          },
           experiences: {
             deleteMany: {},
             create: this.stripIds(data.experience),
@@ -144,6 +148,9 @@ class PortfolioRepository {
           ...portfolioData,
           educations: {
             create: this.stripIds(data.education),
+          },
+          certifications: {
+            create: this.stripIds(data.certifications),
           },
           experiences: {
             create: this.stripIds(data.experience),

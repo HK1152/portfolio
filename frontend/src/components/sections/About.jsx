@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import SectionHeading from '../ui/SectionHeading';
-import { BookOpen, GraduationCap } from 'lucide-react';
+import { BookOpen, GraduationCap, Award } from 'lucide-react';
 import { PortfolioContext } from '../../context/PortfolioContext';
 import Cubes from '../effects/Cubes';
 import SEO from '../ui/SEO';
@@ -16,6 +16,7 @@ export const About = () => {
 
   const aboutText = cvData?.personalInfo?.about || '';
   const education = cvData?.education || [];
+  const certifications = cvData?.certifications || [];
 
   return (
     <section id="about" className="py-20 bg-neutral-950 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -62,41 +63,88 @@ export const About = () => {
             </p>
           </motion.div>
 
-          {/* Education */}
+          {/* Education & Certifications */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
             transition={{ duration: 0.6, delay: 0.2 }}
+            className="space-y-12"
           >
-            <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-2">
-              <GraduationCap className="text-emerald-400" />
-              Education
-            </h3>
+            {/* Education */}
+            <div>
+              <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-2">
+                <GraduationCap className="text-emerald-400" />
+                Education
+              </h3>
 
-            <div className="space-y-8 education-cards">
-              {education.map((edu, index) => (
-                <div key={edu._id || edu.id || index} className="relative pl-8 before:absolute before:left-3 before:top-2 before:w-0.5 before:h-full before:bg-neutral-800 last:before:hidden education-item">
-                  <div className="absolute left-0 top-2 w-6 h-6 bg-emerald-500/20 rounded-full border border-emerald-500 flex items-center justify-center">
-                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                  </div>
-                  <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 hover:border-emerald-500/30 transition-colors education-card-box">
-                    <span className="text-sm font-medium text-emerald-400 inline-block mb-2">
-                      {edu.period}
-                    </span>
-                    <h4 className="text-xl font-bold text-white mb-1">{edu.degree}</h4>
-                    <p className="text-neutral-400 text-sm mb-4 font-medium">{edu.institution}</p>
-                    <ul className="space-y-2">
-                      {edu.details?.map((detail, idx) => (
-                        <li key={idx} className="text-neutral-300 text-sm flex items-start gap-2">
-                          <BookOpen size={16} className="text-blue-400 mt-0.5 flex-shrink-0" />
-                          <span>{detail}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              ))}
+              <div className="space-y-8 education-cards">
+                {education.length === 0 ? (
+                  <p className="text-neutral-500 italic">No education details available.</p>
+                ) : (
+                  education.map((edu, index) => (
+                    <div key={edu._id || edu.id || index} className="relative pl-8 before:absolute before:left-3 before:top-2 before:w-0.5 before:h-full before:bg-neutral-800 last:before:hidden education-item">
+                      <div className="absolute left-0 top-2 w-6 h-6 bg-emerald-500/20 rounded-full border border-emerald-500 flex items-center justify-center">
+                        <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+                      </div>
+                      <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 hover:border-emerald-500/30 transition-colors education-card-box">
+                        <span className="text-sm font-medium text-emerald-400 inline-block mb-2">
+                          {edu.period}
+                        </span>
+                        <h4 className="text-xl font-bold text-white mb-1">{edu.degree}</h4>
+                        <p className="text-neutral-400 text-sm mb-4 font-medium">{edu.institution}</p>
+                        {edu.details && edu.details.length > 0 && (
+                          <ul className="space-y-2">
+                            {edu.details.map((detail, idx) => (
+                              <li key={idx} className="text-neutral-300 text-sm flex items-start gap-2">
+                                <BookOpen size={16} className="text-blue-400 mt-0.5 flex-shrink-0" />
+                                <span>{detail}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
+
+            {/* Courses & Certifications */}
+            {certifications && certifications.length > 0 && (
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-8 flex items-center gap-2">
+                  <Award className="text-primary-400" />
+                  Courses & Certifications
+                </h3>
+
+                <div className="space-y-8 education-cards">
+                  {certifications.map((cert, index) => (
+                    <div key={cert._id || cert.id || index} className="relative pl-8 before:absolute before:left-3 before:top-2 before:w-0.5 before:h-full before:bg-neutral-800 last:before:hidden education-item">
+                      <div className="absolute left-0 top-2 w-6 h-6 bg-primary-500/20 rounded-full border border-primary-500 flex items-center justify-center">
+                        <div className="w-2 h-2 bg-primary-400 rounded-full"></div>
+                      </div>
+                      <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 hover:border-primary-500/30 transition-colors education-card-box">
+                        <span className="text-sm font-medium text-primary-400 inline-block mb-2">
+                          {cert.period}
+                        </span>
+                        <h4 className="text-xl font-bold text-white mb-1">{cert.title}</h4>
+                        <p className="text-neutral-400 text-sm mb-4 font-medium">{cert.issuer}</p>
+                        {cert.details && cert.details.length > 0 && (
+                          <ul className="space-y-2">
+                            {cert.details.map((detail, idx) => (
+                              <li key={idx} className="text-neutral-300 text-sm flex items-start gap-2">
+                                <BookOpen size={16} className="text-primary-400 mt-0.5 flex-shrink-0" />
+                                <span>{detail}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </motion.div>
         </div>
       </div>
