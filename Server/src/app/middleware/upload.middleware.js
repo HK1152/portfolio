@@ -44,11 +44,13 @@ const fileFilterCV = (req, file, cb) => {
 };
 
 const fileFilterImage = (req, file, cb) => {
-  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-  if (allowedMimeTypes.includes(file.mimetype)) {
+  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif', 'image/svg+xml'];
+  const ext = path.extname(file.originalname).toLowerCase();
+  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg'];
+  if (allowedMimeTypes.includes(file.mimetype) || allowedExtensions.includes(ext)) {
     cb(null, true);
   } else {
-    cb(new Error('Only image files (jpeg, jpg, png, webp) are allowed!'), false);
+    cb(new Error('Only image files (jpeg, jpg, png, webp, gif, svg) are allowed!'), false);
   }
 };
 
@@ -61,7 +63,7 @@ const uploadCV = multer({
 const uploadImage = multer({
   storage: storageProjects,
   fileFilter: fileFilterImage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
 module.exports = {

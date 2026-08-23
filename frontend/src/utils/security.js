@@ -62,8 +62,8 @@ export const validateLength = (str, maxLength) => {
  */
 export const validateFileSecurity = (
   file, 
-  maxSizeMB = 5, 
-  allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']
+  maxSizeMB = 10, 
+  allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg', 'image/gif', 'image/svg+xml']
 ) => {
   if (!file) {
     return { isValid: false, error: 'No file provided.' };
@@ -76,7 +76,7 @@ export const validateFileSecurity = (
   }
 
   // 2. Check MIME Type
-  if (allowedTypes && allowedTypes.length > 0 && !allowedTypes.includes(file.type)) {
+  if (allowedTypes && allowedTypes.length > 0 && file.type && !allowedTypes.includes(file.type)) {
     return { 
       isValid: false, 
       error: `Invalid file type: ${file.type || 'unknown'}. Allowed types: ${allowedTypes.join(', ')}` 
@@ -90,13 +90,15 @@ export const validateFileSecurity = (
     'image/jpg': ['jpg', 'jpeg'],
     'image/png': ['png'],
     'image/webp': ['webp'],
+    'image/gif': ['gif'],
+    'image/svg+xml': ['svg'],
     'application/pdf': ['pdf'],
     'application/x-pdf': ['pdf']
   };
 
   const expectedExtensions = typeMap[file.type];
   if (expectedExtensions && !expectedExtensions.includes(extension)) {
-    return { isValid: false, error: 'File extension does not match its content type. Possible spoofing attempt.' };
+    return { isValid: false, error: 'File extension does not match its content type.' };
   }
 
   return { isValid: true, error: null };

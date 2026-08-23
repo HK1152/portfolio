@@ -35,6 +35,24 @@ export const portfolioService = {
     const response = await apiClient.post('/portfolio/about', data);
     return response.data !== undefined ? response.data : response;
   },
+  getProjects: async () => {
+    const response = await apiClient.get('/portfolio/projects');
+    return response.data !== undefined ? response.data : response;
+  },
+  updateProjects: async (data) => {
+    const response = await apiClient.post('/portfolio/projects', data);
+    return response.data !== undefined ? response.data : response;
+  },
+  uploadProjectImage: async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    const response = await apiClient.post('/portfolio/upload-project-image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data !== undefined ? response.data : response;
+  },
   getContact: async () => {
     const response = await apiClient.get('/portfolio/contact');
     return response.data !== undefined ? response.data : response;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import apiClient from '../../../api/apiClient';
+import portfolioService from '../../../services/portfolioService';
 import { Loader2, Plus, Trash2, ChevronUp, ChevronDown, Image as ImageIcon, Upload } from 'lucide-react';
 import { validateFileSecurity } from '../../../utils/security';
 
@@ -18,9 +18,8 @@ const AdminProjects = () => {
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const response = await apiClient.get('/portfolio/projects');
-      const data = response.data || {};
-      setProjects(data.projects || []);
+      const data = await portfolioService.getProjects();
+      setProjects(data?.projects || []);
     } catch (err) {
       setError('Failed to fetch projects data');
     } finally {
@@ -33,7 +32,7 @@ const AdminProjects = () => {
       setIsSaving(true);
       setError('');
       setSuccess('');
-      await apiClient.post('/portfolio/projects', { projects });
+      await portfolioService.updateProjects({ projects });
       setSuccess('Projects updated successfully!');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
@@ -71,10 +70,24 @@ const AdminProjects = () => {
     setProjects(newProjects);
   };
 
+  const getPreviewUrl = (imgPath) => {
+    if (!imgPath) return '';
+    if (imgPath.startsWith('http') || imgPath.startsWith('data:')) return imgPath;
+    const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') : 'http://localhost:5000';
+    return `${baseUrl}${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
+  };
+
   const handleImageUpload = async (index, file) => {
     if (!file) return;
 
-    const validation = validateFileSecurity(file);
+    const validation = validateFileSecurity(file, 10, [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/jpg',
+      'image/gif',
+      'image/svg+xml'
+    ]);
     if (!validation.isValid) {
       setError(validation.error);
       return;
@@ -84,21 +97,17 @@ const AdminProjects = () => {
       setUploadingImage(index);
       setError('');
       
-      const formData = new FormData();
-      formData.append('image', file);
+      const response = await portfolioService.uploadProjectImage(file);
+      const rawUrl = response?.imageUrl || response?.data?.imageUrl || response?.data?.data?.imageUrl;
 
-      const response = await apiClient.post('/portfolio/upload-project-image', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      if (response.data?.imageUrl) {
-        // Backend URL config might prepend host, or just path. Assuming absolute path.
-        updateProject(index, 'image', import.meta.env.VITE_API_URL.replace('/api', '') + response.data.imageUrl);
+      if (rawUrl) {
+        updateProject(index, 'image', rawUrl);
+      } else {
+        throw new Error('Failed to retrieve uploaded image path.');
       }
     } catch (err) {
-      setError('Failed to upload image. Please try again.');
+      console.error('Project image upload error:', err);
+      setError(err.response?.data?.message || err.message || 'Failed to upload image. Please try again.');
     } finally {
       setUploadingImage(null);
     }
@@ -190,7 +199,7 @@ const AdminProjects = () => {
                     <label className="block text-sm font-medium text-neutral-400">Project Image (IMG)</label>
                     <div className="relative group overflow-hidden rounded-xl border-2 border-dashed border-neutral-800 bg-neutral-900 hover:border-primary-500/50 transition-colors aspect-video flex items-center justify-center cursor-pointer">
                       {proj.image ? (
-                        <img src={proj.image} alt={proj.title || 'Project'} className="w-full h-full object-cover" />
+                        <img src={getPreviewUrl(proj.image)} alt={proj.title || 'Project'} className="w-full h-full object-cover" />
                       ) : (
                         <div className="text-center p-4">
                           <ImageIcon className="w-8 h-8 text-neutral-600 mx-auto mb-2" />

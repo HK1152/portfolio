@@ -34,6 +34,13 @@ export const Projects = () => {
   const { cvData } = useContext(PortfolioContext);
   const projects = cvData?.projects || [];
 
+  const getImageUrl = (imgPath) => {
+    if (!imgPath) return 'https://via.placeholder.com/641x641/171717/3f3f3f?text=Project';
+    if (imgPath.startsWith('http') || imgPath.startsWith('data:')) return imgPath;
+    const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') : 'http://localhost:5000';
+    return `${baseUrl}${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
+  };
+
   return (
     <section id="projects" className="pt-32 pb-20 min-h-screen bg-black px-4 sm:px-6 lg:px-8">
       <SEO 
@@ -63,7 +70,7 @@ export const Projects = () => {
                   <div className="flight-card__image-container">
                     <img
                       className="flight-card__image"
-                      src={project.image || 'https://via.placeholder.com/641x641/171717/3f3f3f?text=Project'}
+                      src={getImageUrl(project.image)}
                       alt={project.title}
                       loading="lazy"
                       width="641"
