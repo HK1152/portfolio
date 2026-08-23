@@ -113,10 +113,14 @@ export const Contact = () => {
       }
     } catch (error) {
       console.error('Submission error:', error);
-      setSubmitStatus(`Error: ${error.message || 'Failed to send message'}`);
+      if (error.code === 'auth/unauthorized-domain' || error.message?.includes('unauthorized-domain')) {
+        setSubmitStatus('Error: Domain not authorized in Firebase. Add this domain in Firebase Console (Authentication > Settings > Authorized domains) or use the "Send Message" button above.');
+      } else {
+        setSubmitStatus(`Error: ${error.message || 'Failed to send message'}`);
+      }
     } finally {
       setIsSubmitting(false);
-      setTimeout(() => setSubmitStatus(null), 5000);
+      setTimeout(() => setSubmitStatus(null), 8000);
     }
   };
 
