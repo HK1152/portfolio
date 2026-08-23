@@ -50,7 +50,11 @@ export const validateLength = (str, maxLength) => {
  * @param {Array<string>} allowedTypes - Array of allowed MIME types (e.g. ['image/jpeg', 'image/png'])
  * @returns {Object} { isValid: boolean, error: string|null }
  */
-export const validateFileSecurity = (file, maxSizeMB = 5, allowedTypes = ['image/jpeg', 'image/png', 'image/webp']) => {
+export const validateFileSecurity = (
+  file, 
+  maxSizeMB = 5, 
+  allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']
+) => {
   if (!file) {
     return { isValid: false, error: 'No file provided.' };
   }
@@ -62,19 +66,22 @@ export const validateFileSecurity = (file, maxSizeMB = 5, allowedTypes = ['image
   }
 
   // 2. Check MIME Type
-  if (!allowedTypes.includes(file.type)) {
+  if (allowedTypes && allowedTypes.length > 0 && !allowedTypes.includes(file.type)) {
     return { 
       isValid: false, 
-      error: `Invalid file type: ${file.type}. Allowed types: ${allowedTypes.join(', ')}` 
+      error: `Invalid file type: ${file.type || 'unknown'}. Allowed types: ${allowedTypes.join(', ')}` 
     };
   }
 
   // 3. Optional: Check extension consistency (basic check against spoofed extensions)
-  const extension = file.name.split('.').pop().toLowerCase();
+  const extension = file.name ? file.name.split('.').pop().toLowerCase() : '';
   const typeMap = {
     'image/jpeg': ['jpg', 'jpeg'],
+    'image/jpg': ['jpg', 'jpeg'],
     'image/png': ['png'],
-    'image/webp': ['webp']
+    'image/webp': ['webp'],
+    'application/pdf': ['pdf'],
+    'application/x-pdf': ['pdf']
   };
 
   const expectedExtensions = typeMap[file.type];

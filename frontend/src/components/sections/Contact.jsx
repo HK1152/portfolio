@@ -20,6 +20,13 @@ export const Contact = () => {
   const personalInfo = cvData?.personalInfo || {};
   const email = personalInfo.email || '';
 
+  const getFileUrl = (path) => {
+    if (!path) return '/kavya_cv.pdf';
+    if (path.startsWith('http')) return path;
+    const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') : 'http://localhost:5000';
+    return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`;
+  };
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -176,7 +183,7 @@ export const Contact = () => {
                 <p className="text-neutral-400 text-sm">Download the PDF version here.</p>
               </div>
               <a 
-                href="/kavya_cv.pdf" 
+                href={getFileUrl(personalInfo.cvUrl)} 
                 download="Kavya_Patel_CV.pdf"
                 className="p-4 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-colors border border-white/10"
                 aria-label="Download Full CV"

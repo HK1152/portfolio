@@ -55,12 +55,8 @@ const AdminHome = () => {
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      if (file.type !== 'application/pdf') {
-        setMessage({ type: 'error', text: 'Please select a valid PDF file.' });
-        return;
-      }
 
-      const validation = validateFileSecurity(file);
+      const validation = validateFileSecurity(file, 10, ['application/pdf', 'application/x-pdf']);
       if (!validation.isValid) {
         setMessage({ type: 'error', text: validation.error });
         return;

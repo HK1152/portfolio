@@ -34,7 +34,9 @@ const storageProjects = multer.diskStorage({
 });
 
 const fileFilterCV = (req, file, cb) => {
-  if (file.mimetype === 'application/pdf') {
+  const allowedMimeTypes = ['application/pdf', 'application/x-pdf'];
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (allowedMimeTypes.includes(file.mimetype) || ext === '.pdf') {
     cb(null, true);
   } else {
     cb(new Error('Only PDF files are allowed!'), false);
@@ -53,7 +55,7 @@ const fileFilterImage = (req, file, cb) => {
 const uploadCV = multer({
   storage: storageCV,
   fileFilter: fileFilterCV,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
 const uploadImage = multer({
