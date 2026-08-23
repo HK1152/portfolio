@@ -19,7 +19,10 @@ app.use(helmet({
 
 app.use(
   cors({
-    origin: env.CLIENT_URL === '*' ? true : env.CLIENT_URL.split(',').map((url) => url.trim()),
+    origin: function (origin, callback) {
+      // Allow all origins to bypass CORS issues in deployment
+      callback(null, true);
+    },
     credentials: true,
   })
 );
