@@ -6,6 +6,7 @@ import { BookOpen, GraduationCap, Award } from 'lucide-react';
 import { PortfolioContext } from '../../context/PortfolioContext';
 import Cubes from '../effects/Cubes';
 import SEO from '../ui/SEO';
+import { decodeHtml } from '../../utils/security';
 
 export const About = () => {
   const [ref, inView] = useInView({
@@ -58,8 +59,8 @@ export const About = () => {
               <span className="w-8 h-1 bg-blue-500 rounded-full inline-block"></span>
               My Story
             </h3>
-            <p className="text-neutral-300 leading-relaxed text-lg">
-              {aboutText}
+            <p className="text-neutral-300 leading-relaxed text-lg whitespace-pre-line">
+              {decodeHtml(aboutText)}
             </p>
           </motion.div>
 
@@ -88,16 +89,16 @@ export const About = () => {
                       </div>
                       <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 hover:border-emerald-500/30 transition-colors education-card-box">
                         <span className="text-sm font-medium text-emerald-400 inline-block mb-2">
-                          {edu.period}
+                          {decodeHtml(edu.period)}
                         </span>
-                        <h4 className="text-xl font-bold text-white mb-1">{edu.degree}</h4>
-                        <p className="text-neutral-400 text-sm mb-4 font-medium">{edu.institution}</p>
+                        <h4 className="text-xl font-bold text-white mb-1">{decodeHtml(edu.degree)}</h4>
+                        <p className="text-neutral-400 text-sm mb-4 font-medium">{decodeHtml(edu.institution)}</p>
                         {edu.details && edu.details.length > 0 && (
                           <ul className="space-y-2">
                             {edu.details.map((detail, idx) => (
                               <li key={idx} className="text-neutral-300 text-sm flex items-start gap-2">
                                 <BookOpen size={16} className="text-blue-400 mt-0.5 flex-shrink-0" />
-                                <span>{detail}</span>
+                                <span>{decodeHtml(detail)}</span>
                               </li>
                             ))}
                           </ul>
@@ -125,16 +126,16 @@ export const About = () => {
                       </div>
                       <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 hover:border-primary-500/30 transition-colors education-card-box">
                         <span className="text-sm font-medium text-primary-400 inline-block mb-2">
-                          {cert.period}
+                          {decodeHtml(cert.period)}
                         </span>
-                        <h4 className="text-xl font-bold text-white mb-1">{cert.title}</h4>
-                        <p className="text-neutral-400 text-sm mb-4 font-medium">{cert.issuer}</p>
+                        <h4 className="text-xl font-bold text-white mb-1">{decodeHtml(cert.title)}</h4>
+                        <p className="text-neutral-400 text-sm mb-4 font-medium">{decodeHtml(cert.issuer)}</p>
                         {cert.details && cert.details.length > 0 && (
                           <ul className="space-y-2">
                             {cert.details.map((detail, idx) => (
                               <li key={idx} className="text-neutral-300 text-sm flex items-start gap-2">
                                 <BookOpen size={16} className="text-primary-400 mt-0.5 flex-shrink-0" />
-                                <span>{detail}</span>
+                                <span>{decodeHtml(detail)}</span>
                               </li>
                             ))}
                           </ul>
@@ -153,3 +154,4 @@ export const About = () => {
 };
 
 export default About;
+

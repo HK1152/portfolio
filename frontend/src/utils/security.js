@@ -19,6 +19,16 @@ export const sanitizeInput = (str) => {
     .replace(/'/g, '&#39;');
 };
 
+export const decodeHtml = (str) => {
+  if (!str) return '';
+  return String(str)
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+};
+
 /**
  * Validates email format using a strict regex.
  * @param {string} email 
