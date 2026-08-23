@@ -5,43 +5,8 @@ import SectionHeading from '../ui/SectionHeading';
 import LogoLoop from '../effects/LogoLoop';
 import { PortfolioContext } from '../../context/PortfolioContext';
 import { CardContainer, CardBody, CardItem } from '../ui/3d-card';
-import {
-  SiReact,
-  SiHtml5,
-  SiCss,
-  SiJavascript,
-  SiTailwindcss,
-  SiBootstrap,
-  SiNodedotjs,
-  SiExpress,
-  SiMongodb,
-  SiGithub,
-  SiN8N,
-  SiC,
-  SiCplusplus,
-  SiPostman,
-  SiNetlify
-} from 'react-icons/si';
-import { TbBrandAdobePhotoshop } from 'react-icons/tb';
-
-const techLogos = [
-  { node: <SiReact />, title: "React.js" },
-  { node: <SiHtml5 />, title: "HTML5" },
-  { node: <SiCss />, title: "CSS3" },
-  { node: <SiJavascript />, title: "JavaScript" },
-  { node: <SiTailwindcss />, title: "Tailwind CSS" },
-  { node: <SiBootstrap />, title: "Bootstrap" },
-  { node: <SiNodedotjs />, title: "Node.js" },
-  { node: <SiExpress />, title: "Express.js" },
-  { node: <SiMongodb />, title: "MongoDB" },
-  { node: <SiGithub />, title: "GitHub" },
-  { node: <TbBrandAdobePhotoshop />, title: "Photoshop" },
-  { node: <SiN8N />, title: "n8n" },
-  { node: <SiC />, title: "C" },
-  { node: <SiCplusplus />, title: "C++" },
-  { node: <SiPostman />, title: "Postman" },
-  { node: <SiNetlify />, title: "Netlify" },
-];
+import { getIconComponent } from '../../utils/techIcons';
+import SEO from '../ui/SEO';
 
 export const Skills = () => {
   const [ref, inView] = useInView({
@@ -50,6 +15,16 @@ export const Skills = () => {
   });
   const { cvData } = useContext(PortfolioContext);
   const skills = cvData?.skills || [];
+  const rawTechLogos = cvData?.techLogos || [];
+
+  // Map the raw DB techLogos to the format LogoLoop expects
+  const dynamicTechLogos = rawTechLogos.map((logo) => {
+    const Icon = getIconComponent(logo.iconName);
+    return {
+      node: Icon ? <Icon /> : <div className="w-8 h-8 rounded-full bg-neutral-800" />,
+      title: logo.title,
+    };
+  });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -67,9 +42,13 @@ export const Skills = () => {
   };
 
   return (
-    <section id="skills" className="py-20 bg-black px-4 sm:px-6 lg:px-8 relative">
+    <section id="skills" className="pt-32 pb-20 min-h-screen bg-black px-4 sm:px-6 lg:px-8 relative">
+      <SEO 
+        title="Skills | Kavya Patel"
+        description="Technical skills and expertise of Kavya Patel, including React.js, Node.js, n8n, and various web development tools."
+      />
       {/* Background element */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-blue-900/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-primary-900/10 rounded-full blur-[120px] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         <SectionHeading
@@ -78,20 +57,22 @@ export const Skills = () => {
         />
 
         {/* Logo Loop Marquee */}
-        <div className="mb-10 py-8">
-          <LogoLoop
-            logos={techLogos}
-            speed={60}
-            direction="left"
-            logoHeight={45}
-            gap={60}
-            fadeOut={true}
-            fadeOutColor="#000000"
-            hoverSpeed={10}
-            scaleOnHover={true}
-            ariaLabel="Technical Skills Logoloop"
-          />
-        </div>
+        {dynamicTechLogos.length > 0 && (
+          <div className="mb-10 py-8">
+            <LogoLoop
+              logos={dynamicTechLogos}
+              speed={60}
+              direction="left"
+              logoHeight={45}
+              gap={60}
+              fadeOut={true}
+              fadeOutColor="#000000"
+              hoverSpeed={10}
+              scaleOnHover={true}
+              ariaLabel="Technical Skills Logoloop"
+            />
+          </div>
+        )}
 
         <motion.div
           ref={ref}
@@ -107,10 +88,10 @@ export const Skills = () => {
               className="h-full"
             >
               <CardContainer containerClassName="w-full h-full py-0" className="w-full h-full">
-                <CardBody className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6 hover:border-blue-500/50 transition-colors duration-300 group/card w-full h-full flex flex-col items-start justify-start shadow-xl">
+                <CardBody className="bg-neutral-900 border border-neutral-800 rounded-3xl p-6 hover:border-primary-500/50 transition-colors duration-300 group/card w-full h-full flex flex-col items-start justify-start shadow-xl">
                   <CardItem
                     translateZ="40"
-                    className="text-xl font-bold text-white mb-4 group-hover/card:text-blue-400 transition-colors w-full"
+                    className="text-xl font-bold text-white mb-4 group-hover/card:text-primary-400 transition-colors w-full"
                   >
                     {skillGroup.category}
                   </CardItem>

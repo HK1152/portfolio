@@ -20,21 +20,32 @@ model Portfolio {
   name            String
   title           String
   email           String
-  phone           String?
   linkedin        String?
   github          String?
   location        String?
   about           String?
+  heroDescription String?
   cvUrl           String?
   extraActivities String[]
   
   educations      Education[]
+  certifications  Certification[]
   experiences     Experience[]
   skills          SkillCategory[]
+  techLogos       TechLogo[]
   projects        Project[]
   
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+}
+
+model TechLogo {
+  id           Int        @id @default(autoincrement())
+  portfolioId  Int
+  iconName     String
+  title        String
+  
+  portfolio    Portfolio  @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
 }
 
 model Education {
@@ -43,6 +54,17 @@ model Education {
   period       String
   degree       String
   institution  String
+  details      String[]
+  
+  portfolio    Portfolio  @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+}
+
+model Certification {
+  id           Int        @id @default(autoincrement())
+  portfolioId  Int
+  period       String
+  title        String
+  issuer       String
   details      String[]
   
   portfolio    Portfolio  @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
@@ -71,6 +93,7 @@ model SkillCategory {
 model Project {
   id           Int        @id @default(autoincrement())
   portfolioId  Int
+  image        String?
   title        String
   tech         String
   description  String

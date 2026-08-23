@@ -2,18 +2,169 @@
 @import "./styles/design-tokens.css";
 
 @theme {
-  --font-sans: 'Inter', sans-serif;
-  
+  /* =========================================
+     FONT
+  ========================================= */
+
+  --font-sans: "Inter", sans-serif;
+
+
+  /* =========================================
+     LUXURY FUTURISTIC BLUE PALETTE
+     
+     Dark → Sapphire → Future Blue → Ice
+  ========================================= */
+
+  /* Obsidian */
+  --color-primary-950: #020617;
+
+  /* Midnight Navy */
+  --color-primary-900: #07152E;
+
+  /* Deep Sapphire */
+  --color-primary-800: #0B1B3A;
+
+  /* Rich Sapphire */
+  --color-primary-700: #12306B;
+
+  /* Royal Blue */
+  --color-primary-600: #1D4ED8;
+
+  /* Main Brand Color */
+  --color-primary-500: #2563EB;
+
+  /* Bright Future Blue */
+  --color-primary-400: #3B82F6;
+
+  /* Soft Electric Blue */
+  --color-primary-300: #60A5FA;
+
+  /* Ice Blue */
+  --color-primary-200: #93C5FD;
+
+  /* Frost */
+  --color-primary-100: #DBEAFE;
+
+  /* Almost White */
+  --color-primary-50: #EFF6FF;
+
+
+  /* =========================================
+     SEMANTIC BACKGROUND COLORS
+  ========================================= */
+
+  --color-background: #020617;
+
+  --color-background-secondary: #07152E;
+
+  --color-surface: #0B1B3A;
+
+  --color-surface-hover: #10254A;
+
+
+  /* =========================================
+     BRAND / ACCENT
+  ========================================= */
+
+  --color-brand: #2563EB;
+
+  --color-brand-hover: #3B82F6;
+
+  --color-accent: #60A5FA;
+
+  --color-glow: #38BDF8;
+
+
+  /* =========================================
+     TEXT COLORS
+  ========================================= */
+
+  --color-text-primary: #F8FAFC;
+
+  --color-text-secondary: #B6C4D8;
+
+  --color-text-muted: #718096;
+
+  --color-text-brand: #60A5FA;
+
+
+  /* =========================================
+     BORDER COLORS
+  ========================================= */
+
+  --color-border: rgba(147, 197, 253, 0.12);
+
+  --color-border-hover: rgba(96, 165, 250, 0.35);
+
+
+  /* =========================================
+     STATUS COLORS
+  ========================================= */
+
+  --color-success: #22C55E;
+
+  --color-warning: #F59E0B;
+
+  --color-error: #EF4444;
+
+
+  /* =========================================
+     ANIMATIONS
+  ========================================= */
+
   @keyframes shiny-text {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+    0% {
+      background-position: 200% 0;
+    }
+
+    100% {
+      background-position: -200% 0;
+    }
   }
 
+
   @keyframes blob {
-    0% { transform: translate(0px, 0px) scale(1); }
-    33% { transform: translate(30px, -50px) scale(1.1); }
-    66% { transform: translate(-20px, 20px) scale(0.9); }
-    100% { transform: translate(0px, 0px) scale(1); }
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+
+
+  @keyframes blue-glow {
+    0%,
+    100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.8;
+      transform: scale(1.08);
+    }
+  }
+
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
   }
 }
 
@@ -56,4 +207,22 @@ body {
 .about-cards-container:hover .blur-item:not(:hover) {
   filter: blur(6px);
   transform: scale(0.98);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+html, body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }

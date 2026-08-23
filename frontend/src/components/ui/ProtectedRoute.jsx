@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-neutral-950 flex items-center justify-center">
-        <div className="w-10 h-10 border-t-2 border-emerald-500 rounded-full animate-spin"></div>
+        <div className="w-10 h-10 border-t-2 border-primary-500 rounded-full animate-spin"></div>
       </div>
     );
   }

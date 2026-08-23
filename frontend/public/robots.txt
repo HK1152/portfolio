@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
 
 Sitemap: https://hk-portfolio-1152.web.app/sitemap.xml

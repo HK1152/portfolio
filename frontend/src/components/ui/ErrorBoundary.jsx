@@ -1,15 +1,10 @@
-import React, { Component } from 'react';
-import { AlertTriangle, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react';
+import React from 'react';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
-export class ErrorBoundary extends Component {
+class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      hasError: false,
-      error: null,
-      errorInfo: null,
-      showDetails: false,
-    };
+    this.state = { hasError: false, error: null, errorInfo: null };
   }
 
   static getDerivedStateFromError(error) {
@@ -17,93 +12,50 @@ export class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({ errorInfo });
-    console.error('⚠️ [ErrorBoundary Caught Error]:', error, errorInfo);
+    this.setState({
+      error: error,
+      errorInfo: errorInfo
+    });
+    // Safely log
+    try {
+      console.log('Error caught by boundary:', error.message);
+    } catch(e) {}
   }
 
   handleReset = () => {
-    this.setState({
-      hasError: false,
-      error: null,
-      errorInfo: null,
-      showDetails: false,
-    });
-    if (this.props.onReset) {
-      this.props.onReset();
-    }
-  };
-
-  toggleDetails = () => {
-    this.setState((prev) => ({ showDetails: !prev.showDetails }));
-  };
+    this.setState({ hasError: false, error: null, errorInfo: null });
+    window.location.reload();
+  }
 
   render() {
     if (this.state.hasError) {
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
-
-      const isSection = this.props.isSection;
-
       return (
-        <div
-          className={`${
-            isSection
-              ? 'py-16 px-4 my-8 rounded-3xl border border-red-500/20 bg-neutral-900/60 backdrop-blur-xl'
-              : 'min-h-screen p-6 flex flex-col items-center justify-center bg-neutral-950 text-white'
-          } flex flex-col items-center justify-center text-center`}
-        >
-          <div className="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 mb-6 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
-            <AlertTriangle size={32} />
-          </div>
-
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">
-            {isSection ? 'Component Failed to Load' : 'Something went wrong'}
-          </h2>
-
-          <p className="text-neutral-400 max-w-md mb-6 text-sm md:text-base">
-            {isSection
-              ? 'An error occurred while rendering this section. You can try refreshing it.'
-              : 'We encountered an unexpected error while loading the portfolio.'}
-          </p>
-
-          <div className="flex flex-wrap gap-4 justify-center items-center">
-            <button
-              onClick={this.handleReset}
-              className="flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-black font-semibold rounded-full transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] cursor-pointer"
-            >
-              <RefreshCw size={16} />
-              Try Again
-            </button>
-
-            {!isSection && (
-              <button
-                onClick={() => window.location.reload()}
-                className="flex items-center gap-2 px-6 py-3 border border-neutral-700 hover:border-neutral-500 text-neutral-300 hover:text-white font-semibold rounded-full transition-all cursor-pointer"
-              >
-                Reload Page
-              </button>
-            )}
-
-            {this.state.error && (
-              <button
-                onClick={this.toggleDetails}
-                className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-neutral-200 underline py-2 cursor-pointer"
-              >
-                {this.state.showDetails ? 'Hide Error Details' : 'View Error Details'}
-                {this.state.showDetails ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-              </button>
-            )}
-          </div>
-
-          {this.state.showDetails && this.state.error && (
-            <div className="mt-6 p-4 max-w-2xl w-full text-left bg-black/80 border border-neutral-800 rounded-2xl overflow-x-auto text-xs font-mono text-red-300">
-              <p className="font-bold text-red-400 mb-1">{this.state.error.toString()}</p>
-              <pre className="text-neutral-400 whitespace-pre-wrap">
-                {this.state.errorInfo?.componentStack || this.state.error.stack}
-              </pre>
+        <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center p-4 overflow-y-auto">
+          <div className="max-w-3xl w-full bg-neutral-900 border border-neutral-800 rounded-3xl p-8 flex flex-col items-center text-center shadow-2xl">
+            <div className="w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 mb-6 shadow-[0_0_30px_rgba(239,68,68,0.2)]">
+              <AlertTriangle size={32} />
             </div>
-          )}
+            
+            <h2 className="text-2xl font-bold text-white mb-2">Something went wrong</h2>
+            <p className="text-neutral-400 mb-8">
+              We're sorry, but there was an error rendering this page.
+            </p>
+            
+            <div className="w-full text-left bg-black p-4 rounded text-red-400 font-mono text-xs overflow-auto max-h-96 mb-8">
+               <p className="font-bold">{this.state.error?.toString()}</p>
+               <pre className="mt-2">{this.state.errorInfo?.componentStack}</pre>
+            </div>
+
+            <div className="flex flex-wrap gap-4 justify-center items-center">
+              <button
+                onClick={this.handleReset}
+                className="flex items-center gap-2 px-6 py-3 bg-primary-500 hover:bg-primary-600 text-black font-semibold rounded-full transition-all active:scale-95 shadow-[0_0_20px_rgba(0,29,81,0.3)] cursor-pointer"
+              >
+                <RefreshCw size={16} />
+                Try Again
+              </button>
+            </div>
+          </div>
         </div>
       );
     }

@@ -5,6 +5,7 @@ import SectionHeading from '../ui/SectionHeading';
 import { BookOpen, GraduationCap } from 'lucide-react';
 import { PortfolioContext } from '../../context/PortfolioContext';
 import Cubes from '../effects/Cubes';
+import SEO from '../ui/SEO';
 
 export const About = () => {
   const [ref, inView] = useInView({
@@ -18,6 +19,10 @@ export const About = () => {
 
   return (
     <section id="about" className="py-20 bg-neutral-950 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <SEO 
+        title="About | Kavya Patel"
+        description="Learn more about Kavya Patel's story, background, and educational journey in software development."
+      />
       {/* Cubes Background */}
       <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
         <Cubes
@@ -45,7 +50,7 @@ export const About = () => {
             initial={{ opacity: 0, x: -50 }}
             animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 0.6 }}
-            className="bg-neutral-900 border border-neutral-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden blur-item"
+            className="bg-neutral-900 border border-neutral-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden lg:sticky lg:top-32"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
             <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
@@ -74,7 +79,7 @@ export const About = () => {
                   <div className="absolute left-0 top-2 w-6 h-6 bg-emerald-500/20 rounded-full border border-emerald-500 flex items-center justify-center">
                     <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
                   </div>
-                  <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 hover:border-emerald-500/30 transition-colors education-card-box blur-item">
+                  <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 hover:border-emerald-500/30 transition-colors education-card-box">
                     <span className="text-sm font-medium text-emerald-400 inline-block mb-2">
                       {edu.period}
                     </span>

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../api/apiClient';
 
 export const AuthContext = createContext();
 
@@ -8,20 +8,25 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if token exists in localStorage on initial load
+    // Check if user info exists in localStorage on initial load
+    // Note: The actual token is in an httpOnly cookie. 
+    // If the cookie expires, the next API call will return 401 and the interceptor will handle logout.
     const storedUser = localStorage.getItem('adminUser');
     if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      // Set default auth header for all subsequent axios requests
-      axios.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`;
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch (err) {
+        localStorage.removeItem('adminUser');
+      }
     }
     setLoading(false);
   }, []);
 
   const login = async (adminId, password) => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/auth/login`, {
+      // apiClient uses baseURL automatically
+      const response = await apiClient.post('/auth/login', {
         adminId,
         password,
       });
@@ -30,22 +35,30 @@ export const AuthProvider = ({ children }) => {
         const userData = response.data.data;
         setUser(userData);
         localStorage.setItem('adminUser', JSON.stringify(userData));
-        axios.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`;
         return { success: true };
       }
     } catch (error) {
       console.error('Login error:', error);
       return { 
         success: false, 
-        message: error.response?.data?.message || 'Login failed'
+        message: error.message || 'Login failed'
       };
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('adminUser');
-    delete axios.defaults.headers.common['Authorization'];
+  const logout = async () => {
+    try {
+      await apiClient.post('/auth/logout');
+    } catch (error) {
+      console.error('Error logging out on backend:', error);
+    } finally {
+      setUser(null);
+      localStorage.removeItem('adminUser');
+      // If we are currently on an admin page, redirect to login
+      if (window.location.pathname.startsWith('/admin')) {
+        window.location.href = '/admin/login';
+      }
+    }
   };
 
   return (
@@ -54,3 +67,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+

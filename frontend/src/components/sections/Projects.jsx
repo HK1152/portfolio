@@ -5,26 +5,10 @@ import SectionHeading from '../ui/SectionHeading';
 import { PortfolioContext } from '../../context/PortfolioContext';
 import { Tag, Code2, Cpu, Database, Layout, Link as LinkIcon, Terminal, Globe, Monitor } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
+import SEO from '../ui/SEO';
 import './Projects.css';
 
-// Project images mapping
-import ai_automation from '../../assets/projects/ai_automation.webp';
-import employee_sys from '../../assets/projects/employee_sys.webp';
-import tata_cliq from '../../assets/projects/tata_cliq.webp';
-import samsung from '../../assets/projects/samsung.webp';
-import rolex from '../../assets/projects/rolex.webp';
-import banking from '../../assets/projects/banking.webp';
-import tictactoe from '../../assets/projects/tictactoe.webp';
 
-const projectImages = {
-  1: ai_automation,
-  2: employee_sys,
-  3: tata_cliq,
-  4: samsung,
-  5: rolex,
-  6: banking,
-  7: tictactoe,
-};
 
 // Technology to Icon mapping
 const getTechIcon = (tech) => {
@@ -51,7 +35,11 @@ export const Projects = () => {
   const projects = cvData?.projects || [];
 
   return (
-    <section id="projects" className="py-20 bg-black px-4 sm:px-6 lg:px-8">
+    <section id="projects" className="pt-32 pb-20 min-h-screen bg-black px-4 sm:px-6 lg:px-8">
+      <SEO 
+        title="Projects | Kavya Patel"
+        description="Explore the portfolio of projects by Kavya Patel, featuring full-stack applications and AI automation workflows."
+      />
       <div className="max-w-7xl mx-auto">
         <SectionHeading 
           title="Featured Projects" 
@@ -75,7 +63,7 @@ export const Projects = () => {
                   <div className="flight-card__image-container">
                     <img
                       className="flight-card__image"
-                      src={projectImages[project.id] || projectImages[index + 1] || ai_automation}
+                      src={project.image || 'https://via.placeholder.com/641x641/171717/3f3f3f?text=Project'}
                       alt={project.title}
                       loading="lazy"
                       width="641"
@@ -99,35 +87,43 @@ export const Projects = () => {
                     </div>
 
                     <div className="flight-card__actions mt-4">
-                      <button 
-                        className="flight-card__search-btn" 
-                        type="button"
-                        onClick={() => {
-                          if (project.liveDemo && !project.liveDemo.includes('example.com')) {
-                            const url = project.liveDemo.startsWith('http') ? project.liveDemo : `https://${project.liveDemo}`;
-                            window.open(url, '_blank', 'noopener,noreferrer');
-                          } else {
-                            alert('Live Demo link will be added soon!');
-                          }
-                        }}
-                      >
-                        Live Demo
-                      </button>
-                      <button
-                        className="flight-card__favorite-btn"
-                        type="button"
-                        title="View on GitHub"
-                        onClick={() => {
-                          if (project.githubLink && !project.githubLink.includes('example.com')) {
-                            const url = project.githubLink.startsWith('http') ? project.githubLink : `https://${project.githubLink}`;
-                            window.open(url, '_blank', 'noopener,noreferrer');
-                          } else {
-                            alert('GitHub link will be added soon!');
-                          }
-                        }}
-                      >
-                        <FaGithub size={18} aria-hidden="true" />
-                      </button>
+                      {project.liveDemo ? (
+                        <button 
+                          className="flight-card__search-btn" 
+                          type="button"
+                          onClick={() => {
+                            if (project.liveDemo && !project.liveDemo.includes('example.com')) {
+                              const url = project.liveDemo.startsWith('http') ? project.liveDemo : `https://${project.liveDemo}`;
+                              window.open(url, '_blank', 'noopener,noreferrer');
+                            }
+                          }}
+                        >
+                          Live Demo
+                        </button>
+                      ) : null}
+                      
+                      {project.githubLink ? (
+                        <button
+                          className="flight-card__favorite-btn"
+                          type="button"
+                          title="View on GitHub"
+                          onClick={() => {
+                            if (project.githubLink && !project.githubLink.includes('example.com')) {
+                              const url = project.githubLink.startsWith('http') ? project.githubLink : `https://${project.githubLink}`;
+                              window.open(url, '_blank', 'noopener,noreferrer');
+                            }
+                          }}
+                        >
+                          <FaGithub size={18} aria-hidden="true" />
+                        </button>
+                      ) : (
+                        <div 
+                          className="px-3 py-2 bg-neutral-900 border border-neutral-700 text-neutral-400 rounded-lg text-xs font-semibold uppercase tracking-wider flex items-center justify-center cursor-not-allowed"
+                          title="This repository is private"
+                        >
+                          Private
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
