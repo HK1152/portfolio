@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 
 import MainLayout from './components/layout/MainLayout';
-import AdminLayout from './components/layout/AdminLayout';
+const AdminLayout = lazy(() => import('./components/layout/AdminLayout'));
 
 // Sections
 import Hero from './components/sections/Hero';
@@ -14,13 +14,13 @@ const Projects = lazy(() => import('./components/sections/Projects'));
 const Contact = lazy(() => import('./components/sections/Contact'));
 
 // Admin Pages
-import Login from './components/pages/admin/Login';
-import AdminHome from './components/pages/admin/AdminHome';
-import AdminAbout from './components/pages/admin/AdminAbout';
-import AdminSkills from './components/pages/admin/AdminSkills';
-import AdminExperience from './components/pages/admin/AdminExperience';
-import AdminProjects from './components/pages/admin/AdminProjects';
-import AdminContact from './components/pages/admin/AdminContact';
+const Login = lazy(() => import('./components/pages/admin/Login'));
+const AdminHome = lazy(() => import('./components/pages/admin/AdminHome'));
+const AdminAbout = lazy(() => import('./components/pages/admin/AdminAbout'));
+const AdminSkills = lazy(() => import('./components/pages/admin/AdminSkills'));
+const AdminExperience = lazy(() => import('./components/pages/admin/AdminExperience'));
+const AdminProjects = lazy(() => import('./components/pages/admin/AdminProjects'));
+const AdminContact = lazy(() => import('./components/pages/admin/AdminContact'));
 import ProtectedRoute from './components/ui/ProtectedRoute';
 
 function App() {
