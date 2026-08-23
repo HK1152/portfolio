@@ -22,13 +22,13 @@ exports.csrfProtection = catchAsync(async (req, res, next) => {
     return next();
   }
 
-  // For POST, PUT, DELETE, PATCH: validate token
-  const tokenFromCookie = req.cookies.xsrfToken;
-  const tokenFromHeader = req.headers['x-xsrf-token'];
-
-  if (!tokenFromCookie || !tokenFromHeader || tokenFromCookie !== tokenFromHeader) {
-    return next(ApiError.forbidden('Invalid CSRF token'));
-  }
+  // Temporarily bypass CSRF for cross-domain deployments where frontend cannot read the backend cookie
+  // const tokenFromCookie = req.cookies.xsrfToken;
+  // const tokenFromHeader = req.headers['x-xsrf-token'];
+  // 
+  // if (!tokenFromCookie || !tokenFromHeader || tokenFromCookie !== tokenFromHeader) {
+  //   return next(ApiError.forbidden('Invalid CSRF token'));
+  // }
 
   next();
 });
