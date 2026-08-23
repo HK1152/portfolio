@@ -139,11 +139,11 @@ export const Contact = () => {
           subtitle="Have a project in mind or want to collaborate? Let's talk."
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12" ref={ref}>
+        <div className="max-w-2xl mx-auto" ref={ref}>
           {/* Contact Info */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.6 }}
             className="space-y-8"
           >
@@ -197,7 +197,8 @@ export const Contact = () => {
             </div>
           </motion.div>
 
-          {/* Contact Form */}
+          {/* Contact Form - Commented out */}
+          {/*
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
@@ -335,6 +336,7 @@ export const Contact = () => {
               </div>
             </form>
           </motion.div>
+          */}
         </div>
       </div>
     </section>
