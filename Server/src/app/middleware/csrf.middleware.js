@@ -14,7 +14,7 @@ exports.csrfProtection = catchAsync(async (req, res, next) => {
       token = crypto.randomBytes(32).toString('hex');
       res.cookie('xsrfToken', token, {
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
         // Note: CSRF token MUST NOT be httpOnly so frontend can read it and send it in header
         httpOnly: false,
       });
