@@ -6,6 +6,18 @@ class PortfolioRepository {
     return items.map(({ id, _id, portfolioId, ...rest }) => rest);
   }
 
+  sanitizeProjects(items) {
+    if (!Array.isArray(items)) return [];
+    return items.map(item => ({
+      title: (item.title || 'Untitled Project').trim(),
+      tech: (item.tech || '').trim(),
+      description: (item.description || '').trim(),
+      image: item.image ? String(item.image).trim() : null,
+      liveDemo: item.liveDemo ? String(item.liveDemo).trim() : null,
+      githubLink: item.githubLink ? String(item.githubLink).trim() : null,
+    }));
+  }
+
   async getLatestPortfolio() {
     const portfolio = await prisma.portfolio.findFirst({
       include: {
@@ -138,7 +150,7 @@ class PortfolioRepository {
           },
           projects: {
             deleteMany: {},
-            create: this.stripIds(data.projects),
+            create: this.sanitizeProjects(data.projects),
           },
         },
       });
@@ -159,7 +171,7 @@ class PortfolioRepository {
             create: this.stripIds(data.skills),
           },
           projects: {
-            create: this.stripIds(data.projects),
+            create: this.sanitizeProjects(data.projects),
           },
         },
       });
@@ -354,7 +366,7 @@ class PortfolioRepository {
         data: {
           projects: data.projects ? {
             deleteMany: {},
-            create: this.stripIds(data.projects),
+            create: this.sanitizeProjects(data.projects),
           } : undefined,
         },
       });
@@ -363,7 +375,7 @@ class PortfolioRepository {
         data: {
           name: '', title: '', email: '',
           projects: data.projects ? {
-            create: this.stripIds(data.projects),
+            create: this.sanitizeProjects(data.projects),
           } : undefined,
         },
       });

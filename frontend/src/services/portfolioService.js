@@ -44,6 +44,24 @@ export const portfolioService = {
     return response.data !== undefined ? response.data : response;
   },
   uploadProjectImage: async (file) => {
+    try {
+      // 1. Try uploading to Firebase Cloud Storage for permanent CDN URL
+      const { storage } = await import('../config/firebase');
+      const { ref, uploadBytes, getDownloadURL } = await import('firebase/storage');
+      
+      const cleanFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+      const storageRef = ref(storage, `projects/${Date.now()}_${cleanFileName}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      
+      if (downloadURL) {
+        return { imageUrl: downloadURL };
+      }
+    } catch (firebaseErr) {
+      console.warn('Firebase storage upload failed or not configured, falling back to server upload:', firebaseErr);
+    }
+
+    // 2. Fallback to Server API upload if Firebase storage fails
     const formData = new FormData();
     formData.append('image', file);
     const response = await apiClient.post('/portfolio/upload-project-image', formData, {

@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import portfolioService from '../../../services/portfolioService';
+import { PortfolioContext } from '../../../context/PortfolioContext';
 import { Loader2, Plus, Trash2, ChevronUp, ChevronDown, Image as ImageIcon, Upload } from 'lucide-react';
 import { validateFileSecurity } from '../../../utils/security';
+
+const DEFAULT_PROJECT_FALLBACK = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop';
 
 const AdminProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -10,6 +13,7 @@ const AdminProjects = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [uploadingImage, setUploadingImage] = useState(null);
+  const { refreshPortfolio } = useContext(PortfolioContext) || {};
 
   useEffect(() => {
     fetchData();
@@ -33,8 +37,11 @@ const AdminProjects = () => {
       setError('');
       setSuccess('');
       await portfolioService.updateProjects({ projects });
-      setSuccess('Projects updated successfully!');
-      setTimeout(() => setSuccess(''), 3000);
+      if (typeof refreshPortfolio === 'function') {
+        await refreshPortfolio();
+      }
+      setSuccess('Projects updated and saved successfully to database!');
+      setTimeout(() => setSuccess(''), 4000);
     } catch (err) {
       setError(err.message || 'Failed to save projects');
     } finally {
@@ -65,9 +72,11 @@ const AdminProjects = () => {
   };
 
   const updateProject = (index, field, val) => {
-    const newProjects = [...projects];
-    newProjects[index][field] = val;
-    setProjects(newProjects);
+    setProjects((prev) => {
+      const newProjects = [...prev];
+      newProjects[index] = { ...newProjects[index], [field]: val };
+      return newProjects;
+    });
   };
 
   const getPreviewUrl = (imgPath) => {
@@ -102,6 +111,8 @@ const AdminProjects = () => {
 
       if (rawUrl) {
         updateProject(index, 'image', rawUrl);
+        setSuccess('Image uploaded! Click "Save Changes" to save it permanently in the database.');
+        setTimeout(() => setSuccess(''), 4000);
       } else {
         throw new Error('Failed to retrieve uploaded image path.');
       }
@@ -199,7 +210,15 @@ const AdminProjects = () => {
                     <label className="block text-sm font-medium text-neutral-400">Project Image (IMG)</label>
                     <div className="relative group overflow-hidden rounded-xl border-2 border-dashed border-neutral-800 bg-neutral-900 hover:border-primary-500/50 transition-colors aspect-video flex items-center justify-center cursor-pointer">
                       {proj.image ? (
-                        <img src={getPreviewUrl(proj.image)} alt={proj.title || 'Project'} className="w-full h-full object-cover" />
+                        <img 
+                          src={getPreviewUrl(proj.image)} 
+                          alt={proj.title || 'Project'} 
+                          className="w-full h-full object-cover" 
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = DEFAULT_PROJECT_FALLBACK;
+                          }}
+                        />
                       ) : (
                         <div className="text-center p-4">
                           <ImageIcon className="w-8 h-8 text-neutral-600 mx-auto mb-2" />
@@ -216,7 +235,7 @@ const AdminProjects = () => {
                       {uploadingImage === projIndex && (
                         <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center">
                           <Loader2 className="w-6 h-6 animate-spin text-primary-500 mb-2" />
-                          <span className="text-xs text-white">Uploading...</span>
+                          <span className="text-xs text-white">Uploading to Cloud...</span>
                         </div>
                       )}
 
@@ -228,15 +247,14 @@ const AdminProjects = () => {
                         disabled={uploadingImage === projIndex}
                       />
                     </div>
-                    {proj.image && (
-                      <input
-                        type="text"
-                        value={proj.image}
-                        onChange={(e) => updateProject(projIndex, 'image', e.target.value)}
-                        placeholder="Or enter image URL"
-                        className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-xs text-neutral-400 focus:outline-none focus:border-primary-500 transition-colors mt-2"
-                      />
-                    )}
+                    
+                    <input
+                      type="text"
+                      value={proj.image || ''}
+                      onChange={(e) => updateProject(projIndex, 'image', e.target.value)}
+                      placeholder="Or enter direct image URL"
+                      className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-xs text-neutral-300 focus:outline-none focus:border-primary-500 transition-colors mt-2"
+                    />
                   </div>
 
                   {/* Right Column - Text Details */}

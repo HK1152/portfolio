@@ -34,9 +34,11 @@ export const Projects = () => {
   const { cvData } = useContext(PortfolioContext);
   const projects = cvData?.projects || [];
 
+  const DEFAULT_PROJECT_IMG = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop';
+
   const getImageUrl = (imgPath) => {
-    if (!imgPath) return 'https://via.placeholder.com/641x641/171717/3f3f3f?text=Project';
-    if (imgPath.startsWith('http') || imgPath.startsWith('data:')) return imgPath;
+    if (!imgPath) return DEFAULT_PROJECT_IMG;
+    if (imgPath.startsWith('http://') || imgPath.startsWith('https://') || imgPath.startsWith('data:')) return imgPath;
     const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') : 'http://localhost:5000';
     return `${baseUrl}${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
   };
@@ -75,6 +77,10 @@ export const Projects = () => {
                       loading="lazy"
                       width="641"
                       height="641"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = DEFAULT_PROJECT_IMG;
+                      }}
                     />
                   </div>
                   
