@@ -10,6 +10,24 @@ export const portfolioService = {
     return response.data !== undefined ? response.data : response;
   },
   uploadCV: async (file) => {
+    try {
+      // 1. Try uploading CV to Firebase Cloud Storage for fast, permanent CDN URL
+      const { storage } = await import('../config/firebase');
+      const { ref, uploadBytes, getDownloadURL } = await import('firebase/storage');
+      
+      const cleanFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+      const storageRef = ref(storage, `cv/${Date.now()}_${cleanFileName}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      
+      if (downloadURL) {
+        return { cvUrl: downloadURL };
+      }
+    } catch (firebaseErr) {
+      console.warn('Firebase storage CV upload failed, falling back to server:', firebaseErr);
+    }
+
+    // 2. Fallback to Server API upload if Firebase storage fails
     const formData = new FormData();
     formData.append('cv', file);
     const response = await apiClient.post('/portfolio/upload-cv', formData, {
