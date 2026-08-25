@@ -1,27 +1,39 @@
-.flight-card {
-	background-color: #171717; /* neutral-900 */
-	box-shadow: 0 0.5em 0.75em rgba(0, 0, 0, 0.4);
-	border-radius: 2em;
+.project-dossier {
+	background: linear-gradient(145deg, rgba(11, 27, 58, 0.88), rgba(2, 6, 23, 0.96));
+	box-shadow: 0 1.25em 2.5em rgba(0, 0, 0, 0.28);
+	border-radius: 1rem;
 	position: relative;
 	width: 100%;
 	height: auto;
-	transition: background-color 0.3s;
-	border: 1px solid #262626; /* neutral-800 */
+	transition: transform 0.3s ease, border-color 0.3s ease;
+	border: 1px solid rgba(147, 197, 253, 0.12);
 	overflow: hidden;
 }
 
-.flight-card__image-container {
-	aspect-ratio: 1;
-	padding: 0.375em;
-	width: 100%;
+.project-dossier:hover {
+	transform: translateY(-0.4rem);
+	border-color: rgba(96, 165, 250, 0.45);
 }
 
-.flight-card__image {
-	object-fit: cover;
-	width: 100%;
-	height: 100%;
-	border-radius: 1.625em;
-	display: block;
+.project-dossier__topline {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1.25rem 1.25rem 0;
+	color: #60a5fa;
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+
+.project-dossier__index {
+	font-size: 1.1rem;
+	letter-spacing: 0.05em;
+}
+
+.project-dossier__status {
+	color: #718096;
 }
 
 .flight-card__content {
@@ -31,10 +43,10 @@
 }
 
 .flight-card__title {
-	color: #ffffff;
+	color: #f8fafc;
 	font-size: 1.5em;
 	font-weight: 600;
-	letter-spacing: -0.025em;
+	letter-spacing: 0;
 	line-height: 1.2;
 	margin: 0.5em 0 0.25em 0;
 }
@@ -42,14 +54,14 @@
 .flight-card__class {
 	font-size: 0.875em;
 	margin-bottom: 1rem;
-	color: #a3a3a3; /* neutral-400 */
+	color: #b6c4d8;
 	font-weight: 300;
 }
 
 .flight-card__details {
 	font-size: 0.875em;
 	margin-bottom: 1.5rem;
-	color: #e5e5e5; /* neutral-200 */
+	color: #dbeafe;
 	display: flex;
 	align-items: center;
 	gap: 1rem;
@@ -64,7 +76,7 @@
 }
 
 .flight-card__detail-item .lucide {
-	color: #d4d4d4; /* neutral-300 */
+	color: #60a5fa;
 }
 
 .flight-card__actions {
@@ -75,28 +87,33 @@
 }
 
 .flight-card__search-btn {
-	background-color: #ffffff;
-	border-radius: 1.25rem;
-	color: #000000;
+	background-color: #2563eb;
+	border-radius: 0.6rem;
+	color: #ffffff;
 	cursor: pointer;
 	font-size: 0.875em;
 	font-weight: 600;
 	line-height: 1.3333;
 	padding: 0.75rem 1rem;
 	width: 100%;
-	transition: background-color 0.2s;
+	transition: background-color 0.2s, transform 0.2s;
 	border: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.35rem;
 }
 
 .flight-card__search-btn:hover {
-	background-color: #e5e5e5;
+	background-color: #3b82f6;
+	transform: translateY(-1px);
 }
 
 .flight-card__favorite-btn {
 	background: transparent;
-	border: 0.125em solid #404040; /* neutral-700 */
+	border: 0.125em solid rgba(147, 197, 253, 0.24);
 	border-radius: 50%;
-	color: #ef4444; /* red-500 */
+	color: #93c5fd;
 	cursor: pointer;
 	display: flex;
 	flex-shrink: 0;
@@ -108,19 +125,6 @@
 }
 
 .flight-card__favorite-btn:hover {
-	background-color: rgba(255, 255, 255, 0.05);
-	border-color: #525252;
-}
-
-/* Split layout specifics (always used as requested) */
-.flight-card--split {
-	display: flex;
-	flex-direction: column;
-}
-
-.flight-card--split .flight-card__image {
-	aspect-ratio: 1;
-	position: static;
-	width: 100%;
-	height: auto;
+	background-color: rgba(96, 165, 250, 0.12);
+	border-color: #60a5fa;
 }

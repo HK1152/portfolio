@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import SectionHeading from '../ui/SectionHeading';
 import { PortfolioContext } from '../../context/PortfolioContext';
-import { Tag, Code2, Cpu, Database, Layout, Link as LinkIcon, Terminal, Globe, Monitor } from 'lucide-react';
+import { Tag, Code2, Cpu, Database, Layout, Link as LinkIcon, Terminal, Globe, Monitor, ArrowUpRight } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
 import SEO from '../ui/SEO';
 import './Projects.css';
@@ -34,15 +34,6 @@ export const Projects = () => {
   const { cvData } = useContext(PortfolioContext);
   const projects = cvData?.projects || [];
 
-  const DEFAULT_PROJECT_IMG = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop';
-
-  const getImageUrl = (imgPath) => {
-    if (!imgPath) return DEFAULT_PROJECT_IMG;
-    if (imgPath.startsWith('http://') || imgPath.startsWith('https://') || imgPath.startsWith('data:')) return imgPath;
-    const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '') : 'http://localhost:5000';
-    return `${baseUrl}${imgPath.startsWith('/') ? '' : '/'}${imgPath}`;
-  };
-
   return (
     <section id="projects" className="pt-32 pb-20 min-h-screen bg-black px-4 sm:px-6 lg:px-8">
       <SEO 
@@ -68,27 +59,16 @@ export const Projects = () => {
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <div className="flight-card flight-card--split h-full flex flex-col">
-                  <div className="flight-card__image-container">
-                    <img
-                      className="flight-card__image"
-                      src={getImageUrl(project.image)}
-                      alt={project.title}
-                      loading="lazy"
-                      width="641"
-                      height="641"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = DEFAULT_PROJECT_IMG;
-                      }}
-                    />
+                <article className="project-dossier h-full flex flex-col">
+                  <div className="project-dossier__topline">
+                    <span className="project-dossier__index">0{index + 1}</span>
+                    <span className="project-dossier__status">Case study</span>
                   </div>
-                  
-                  <div className="flight-card__content flex-grow flex flex-col">
+                  <div className="flight-card__content grow flex flex-col">
                     <h2 className="flight-card__title">{project.title}</h2>
                     <p className="flight-card__class line-clamp-2">{project.description}</p>
                     
-                    <div className="flight-card__details mt-auto">
+                    <div className="flight-card__details">
                       <div className="flight-card__detail-item">
                         {getTechIcon(techs[0])}
                         <span className="text-xs font-semibold">{techs[0]}</span>
@@ -111,7 +91,7 @@ export const Projects = () => {
                             }
                           }}
                         >
-                          Live Demo
+                          Live Demo <ArrowUpRight size={16} aria-hidden="true" />
                         </button>
                       ) : null}
                       
@@ -139,7 +119,7 @@ export const Projects = () => {
                       )}
                     </div>
                   </div>
-                </div>
+                </article>
               </motion.div>
             );
           })}
